@@ -1,0 +1,11 @@
+POST http://localhost:4000/create_user
+Content-Type: application/json
+
+{
+    "password": "1234",
+    "schoolNumber": "10214"
+}
+
+################################
+
+GET http://localhost:4000/users
