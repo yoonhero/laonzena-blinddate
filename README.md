@@ -7,7 +7,7 @@
 
 - Server
 
-    - [ ] Create User 
+    - [x] Create User 
     - [ ] Update Information
     - [ ] Waiting for Matching UP.
     - [ ] Admin Panel for matching inforamtion.
