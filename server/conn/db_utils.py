@@ -1,4 +1,4 @@
-from models import db
+from models.index import db
 
 
 def get_all(model):
@@ -26,3 +26,7 @@ def edit_instance(model, id, **kwargs):
 
 def commit_changes():
     db.session.commit()
+
+
+# def filter_user(model, schoolNumber):
+#     model.query

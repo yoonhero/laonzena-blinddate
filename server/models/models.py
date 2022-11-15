@@ -21,7 +21,6 @@ class User(db.Model):
 
     # Create USER
 
-    def __init__(self, username, password, schoolNumber):
-        self.username = username
+    def __init__(self, password, schoolNumber):
         self.password = password
         self.schoolNumber = schoolNumber
