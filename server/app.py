@@ -5,7 +5,8 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import hashlib
 import jwt
-
+from functools import wraps
+import os
 
 from models.index import User
 from question import Question
@@ -14,7 +15,23 @@ from conn.index import create_app
 from auth.user import decode_jwt_to_user, encode_user_to_jwt
 
 app = create_app()
+secret_key = os.getenv('SECRET_KEY')
+app.config["SECRET_KEY"] = secret_key
 question = Question()
+
+
+def token_required(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+
+        if not token:
+            return jsonify({"status": "fail", "message": "Token is missing!"})
+        try:
+            payload = decode_jwt_to_user(token, app.config["SECRET_KEY"])
+        except:
+            return jsonify({"status": "fail", "message": "Invalid Token"})
+    return decorated
 
 
 @app.route("/question/{id}", methods=["GET", "POST"])
@@ -61,7 +78,8 @@ def post():
     add_instance(User,
                  password=hashed_password, schoolNumber=schoolNumber)
 
-    encoded_jwt_token = encode_user_to_jwt(schoolNumber, hashed_password)
+    encoded_jwt_token = encode_user_to_jwt(
+        schoolNumber, hashed_password, app.config["SECRET_KEY"])
 
     return jsonify({"status": "success", "message": "Create user successfully", "Authorization": encoded_jwt_token}), 200
 
@@ -87,7 +105,8 @@ def login():
 
     if hashed_password == database_password:
         # Login
-        encoded_jwt_token = encode_user_to_jwt(schoolNumber, hashed_password)
+        encoded_jwt_token = encode_user_to_jwt(
+            schoolNumber, hashed_password, app.config["SECRET_KEY"])
 
         return jsonify({"status": "success", "message": "Login successfully!", "Authorization": encoded_jwt_token}), 200
 
@@ -107,6 +126,7 @@ def jwt_valid():
 
 
 @app.route("/users", methods=["GET"])
+@token_required
 def user_list():
     users = get_all(User)
     all_users = []
