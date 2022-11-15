@@ -10,9 +10,9 @@ import os
 
 from models.index import User
 from question import Question
-from conn.db_utils import add_instance, delete_instance, get_all
+from conn.db_utils import add_instance, delete_instance, get_all, edit_instance, commit_changes
 from conn.index import create_app
-from auth.user import decode_jwt_to_user, encode_user_to_jwt
+from auth.user import decode_jwt_to_user, encode_user_to_jwt, get_schoolNumber
 
 app = create_app()
 secret_key = os.getenv('SECRET_KEY')
@@ -34,11 +34,16 @@ def token_required(func):
     return decorated
 
 
-@app.route("/question/{id}", methods=["GET", "POST"])
+@app.route("/question/<id>", methods=["GET", "POST"])
+@token_required
 def question_api(id):
+    return id
     if request.method == "GET":
         # RETURN QUESTION
+        print(id, type(id))
         target_question = question[id]
+
+        print(target_question)
 
         return jsonify(target_question)
 
@@ -50,12 +55,19 @@ def question_api(id):
         try:
             params = request.get_json()
 
-            answer_idx = int(params.get("answer"))
-            answer = question.get(id, answer_idx)
+            # /question/1 {answer_idx: 2}
+            answer_idx = int(params.get("answer_idx"))
+            answer, type = question.get(id, answer_idx)
 
             print(answer)
+            schoolNumber = get_schoolNumber()
 
             # TODO: Save the answer to DB
+            # instance = User.query.filter_by(schoolNumber=schoolNumber).first_or_404(
+            # description='There is no user with {}. Please Login First.'.format(schoolNumber))
+            # setattr(instance, type, answer)
+            # commit_changes()
+
             return jsonify({"status": "success", "message": "Save your answer to the server successfully"})
         except:
             return jsonify({"status": "fail", "message": "Error when process the answer data."})

@@ -16,3 +16,9 @@ def decode_jwt_to_user(jwt_token, secret):
     data = jwt.decode(jwt_token, secret, algorithms="HS256")
 
     return data
+
+
+def get_schoolNumber(jwt_token, secret):
+    data = decode_jwt_to_user(jwt_token, secret)
+
+    return data.get('schoolNumber')
