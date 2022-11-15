@@ -25,3 +25,9 @@ Content-Type: application/json
 GET http://localhost:4000/valid
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY2hvb2xOdW1iZXIiOiIxMDIxNCIsInBhc3N3b3JkIjoiMDNhYzY3NDIxNmYzZTE1Yzc2MWVlMWE1ZTI1NWYwNjc5NTM2MjNjOGIzODhiNDQ1OWUxM2Y5NzhkN2M4NDZmNCJ9.5XpzeaoEJS79q_quS6D-uFPH3COdEianowpxn50Kmhw
+
+
+### GET
+GET http://localhost:4000/question/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY2hvb2xOdW1iZXIiOiIxMDIxNCIsInBhc3N3b3JkIjoiMDNhYzY3NDIxNmYzZTE1Yzc2MWVlMWE1ZTI1NWYwNjc5NTM2MjNjOGIzODhiNDQ1OWUxM2Y5NzhkN2M4NDZmNCJ9.--zei_dBiG6ErUnNUWJL5cDYf9x-wdO-_-RPzMECYQY    
