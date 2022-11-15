@@ -4,13 +4,14 @@ from flask import (
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import hashlib
+import jwt
 
 
 from models.index import User
 from question import Question
 from conn.db_utils import add_instance, delete_instance, get_all
 from conn.index import create_app
-
+from auth.user import decode_jwt_to_user, encode_user_to_jwt
 
 app = create_app()
 question = Question()
@@ -60,29 +61,49 @@ def post():
     add_instance(User,
                  password=hashed_password, schoolNumber=schoolNumber)
 
-    return jsonify({"status": "success", "message": "Create user successfully"})
+    encoded_jwt_token = encode_user_to_jwt(schoolNumber, hashed_password)
+
+    return jsonify({"status": "success", "message": "Create user successfully", "Authorization": encoded_jwt_token}), 200
 
 
 @app.route("/login", methods=["POST"])
 def login():
     params = request.get_json()
 
+    # Without JWT Token
     schoolNumber = params.get('schoolNumber')
     password = params.get('password')
 
     # hashed_user_password = bcrypt.hashpw(password, salt)
-    hashed_user_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     # GET Hashed password from Database using Username
-    target_user = User.query.filter(User.schoolNumber == schoolNumber)[0]
+    target_user = User.query.filter(User.schoolNumber == schoolNumber).first_or_404(
+        description='There is no user with {}'.format(schoolNumber))
+
+    # if not target_user:
+    #     return jsonify({"status": "fail", "message": "No user found."})
     database_password = target_user.password
 
-    if hashed_user_password == database_password:
+    if hashed_password == database_password:
         # Login
-        return jsonify({"status": "success", "message": "login successfully"})
+        encoded_jwt_token = encode_user_to_jwt(schoolNumber, hashed_password)
+
+        return jsonify({"status": "success", "message": "Login successfully!", "Authorization": encoded_jwt_token}), 200
 
     else:
-        return jsonify({"status": "fail", "message": "fail to login"})
+        return jsonify({"status": "fail", "message": "Password is wrong."}), 404
+
+
+@app.route("/valid", methods=["GET"])
+def jwt_valid():
+    header = request.headers.get('Authorization')
+
+    if header == None:
+        return jsonify({"status": "fail", "message": "Please Login First"}), 404
+
+    data = decode_jwt_to_user(header)
+    return data, 200
 
 
 @app.route("/users", methods=["GET"])
