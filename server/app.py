@@ -1,5 +1,5 @@
 from flask import (
-    Flask, render_template, request, jsonify
+    Flask, render_template, request, jsonify, make_response
 )
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -26,18 +26,20 @@ def token_required(func):
         token = request.headers.get('Authorization')
 
         if not token:
-            return jsonify({"status": "fail", "message": "Token is missing!"})
+            return make_response(jsonify({"status": "fail", "message": "A valid token is missing!"}), 401)
         try:
-            payload = decode_jwt_to_user(token, app.config["SECRET_KEY"])
+            current_user = decode_jwt_to_user(token, app.config["SECRET_KEY"])
         except:
-            return jsonify({"status": "fail", "message": "Invalid Token"})
+            return make_response(jsonify({"status": "fail", "message": "Invalid Token"}), 401)
+
+        return func(current_user, *args, **kwargs)
+
     return decorated
 
 
 @app.route("/question/<id>", methods=["GET", "POST"])
 @token_required
-def question_api(id):
-    return id
+def question_api(id, auth_user):
     if request.method == "GET":
         # RETURN QUESTION
         print(id, type(id))
@@ -60,7 +62,7 @@ def question_api(id):
             answer, type = question.get(id, answer_idx)
 
             print(answer)
-            schoolNumber = get_schoolNumber()
+            schoolNumber = auth_user.get("schoolNumber")
 
             # TODO: Save the answer to DB
             # instance = User.query.filter_by(schoolNumber=schoolNumber).first_or_404(
@@ -139,7 +141,7 @@ def jwt_valid():
 
 @app.route("/users", methods=["GET"])
 @token_required
-def user_list():
+def user_list(auth):
     users = get_all(User)
     all_users = []
     for user in users:
