@@ -7,6 +7,7 @@ import hashlib
 import jwt
 from functools import wraps
 import os
+import csv
 
 from models.index import User
 from question import Question
@@ -83,9 +84,7 @@ def question_api(auth_user, id):
 
 
 @app.route("/create_user", methods=["POST"])
-def post():
-    print(request.args.get('user'))
-
+def create_user():
     params = request.get_json()
 
     #username = params.get('username')
@@ -149,22 +148,37 @@ def login():
 @app.route("/users", methods=["GET"])
 @token_required
 def user_list(auth):
+    if auth.schoolNumber != "10214":
+        return make_response(jsonify({"status":"faile", "message":"No Access Authority"}), 401)
+
+    params = request.get_json()
+    save_csv = params.get("save_csv")
+
     users = get_all(User)
     all_users = []
     for user in users:
         new_user = {
             "id": user.id,
             "password": user.password,
+            "age": user.age,
             "gender": user.gender,
             "mbti": user.mbti,
             "bloodtype": user.bloodtype,
             "favoriteFood": user.favoriteFood,
             "favoriveColor": user.favoriteColor,
+            "matchedUser": user.matchedUser
         }
 
         all_users.append(new_user)
 
+    if bool(save_csv):
+        with open('users.csv','wb') as f:
+            w = csv.writer(f)
+            w.writerow(all_users.keys())
+            w.writerow(all_users.values())
+
     return jsonify(all_users), 200
+
 
 
 if __name__ == '__main__':
