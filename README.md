@@ -9,9 +9,11 @@
 
     - [x] Create User 
     - [x] Update Information
-    - [ ] Waiting for Matching UP.
-    - [ ] Admin Panel for matching inforamtion.
-    - [ ] Chatting with matched person (anonymously)
+    - [ ] Matching
+      - [x] Matching Database Relationship
+      - [ ] Waiting for Matching UP.
+      - [ ] Admin Panel for matching inforamtion.
+      - [ ] Chatting with matched person (anonymously)
 
 - AI & ML
 

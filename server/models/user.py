@@ -21,6 +21,7 @@ class User(db.Model):
 
     # Matched Relation with SchoolNumber
     matchedUser = db.Column(db.String(5))
+    matched = db.Column(db.Boolean, default=False)
 
     # TODO: For Chatting
     messages = db.relationship("Message", back_populates="user")
