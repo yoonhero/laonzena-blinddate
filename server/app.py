@@ -17,6 +17,8 @@ from auth.user import decode_jwt_to_user, encode_user_to_jwt, get_schoolNumber
 app = create_app()
 secret_key = os.getenv('SECRET_KEY')
 app.config["SECRET_KEY"] = secret_key
+app.config["JSON_AS_ASCII"] = False
+
 question = Question()
 
 
@@ -39,10 +41,11 @@ def token_required(func):
 
 @app.route("/question/<id>", methods=["GET", "POST"])
 @token_required
-def question_api(id, auth_user):
+def question_api(auth_user, id):
+    id = int(id)
+
     if request.method == "GET":
         # RETURN QUESTION
-        print(id, type(id))
         target_question = question[id]
 
         print(target_question)
@@ -54,25 +57,29 @@ def question_api(id, auth_user):
     # ANSWER INDEX 1~
     elif request.method == "POST":
         # SAVE THE DICTIONARY
-        try:
-            params = request.get_json()
+        params = request.get_json()
 
-            # /question/1 {answer_idx: 2}
-            answer_idx = int(params.get("answer_idx"))
-            answer, type = question.get(id, answer_idx)
+        # /question/1 {answer_idx: 2}
+        answer_idx = int(params.get("answer_idx"))
 
-            print(answer)
-            schoolNumber = auth_user.get("schoolNumber")
+        if answer_idx == None:
+            return make_response(jsonify({"status": "fail", "message": "Please Send the Question Answer Index."}), 401)
 
-            # TODO: Save the answer to DB
-            # instance = User.query.filter_by(schoolNumber=schoolNumber).first_or_404(
-            # description='There is no user with {}. Please Login First.'.format(schoolNumber))
-            # setattr(instance, type, answer)
-            # commit_changes()
+        # GET Question From Module
+        answer, type = question.get(id, answer_idx)
 
-            return jsonify({"status": "success", "message": "Save your answer to the server successfully"})
-        except:
-            return jsonify({"status": "fail", "message": "Error when process the answer data."})
+        if answer == None and type == None:
+            return make_response(jsonify({"status": "fail", "message": "Please Send Appropirate Answer Index"}), 401)
+
+        schoolNumber = auth_user.get("schoolNumber")
+
+        # TODO: Save the answer to DB
+        instance = User.query.filter_by(schoolNumber=schoolNumber).first_or_404(
+            description='There is no user with {}. Please Login First.'.format(schoolNumber))
+        setattr(instance, type, answer)
+        commit_changes()
+
+        return jsonify({"status": "success", "message": "Save your answer to the server successfully"})
 
 
 @app.route("/create_user", methods=["POST"])
@@ -128,15 +135,15 @@ def login():
         return jsonify({"status": "fail", "message": "Password is wrong."}), 404
 
 
-@app.route("/valid", methods=["GET"])
-def jwt_valid():
-    header = request.headers.get('Authorization')
+# @app.route("/valid", methods=["GET"])
+# def jwt_valid():
+#     header = request.headers.get('Authorization')
 
-    if header == None:
-        return jsonify({"status": "fail", "message": "Please Login First"}), 404
+#     if header == None:
+#         return jsonify({"status": "fail", "message": "Please Login First"}), 404
 
-    data = decode_jwt_to_user(header)
-    return data, 200
+#     data = decode_jwt_to_user(header)
+#     return data, 200
 
 
 @app.route("/users", methods=["GET"])
@@ -147,7 +154,12 @@ def user_list(auth):
     for user in users:
         new_user = {
             "id": user.id,
-            "password": user.password
+            "password": user.password,
+            "gender": user.gender,
+            "mbti": user.mbti,
+            "bloodtype": user.bloodtype,
+            "favoriteFood": user.favoriteFood,
+            "favoriveColor": user.favoriteColor,
         }
 
         all_users.append(new_user)

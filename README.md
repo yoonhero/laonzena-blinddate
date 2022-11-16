@@ -8,7 +8,7 @@
 - Server
 
     - [x] Create User 
-    - [ ] Update Information
+    - [x] Update Information
     - [ ] Waiting for Matching UP.
     - [ ] Admin Panel for matching inforamtion.
     - [ ] Chatting with matched person (anonymously)

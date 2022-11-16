@@ -11,6 +11,7 @@ class User(db.Model):
     schoolNumber = db.Column(db.String(5), unique=True, nullable=False)
 
     # User Information
+    ## TODO: AGE
     gender = db.Column(db.String(10))
     mbti = db.Column(db.String(10))
     bloodtype = db.Column(db.String(5))
