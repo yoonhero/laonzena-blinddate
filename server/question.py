@@ -4,10 +4,12 @@ import json
 class Question():
     def __init__(self):
         self.questions = [
-            {"question": "MBTI가 뭔가요?", "answers": ["INFP", "ENFP", 'ESFJ', "ISFJ", "ISFP", "ESFP", "INTP",
-                                                   "INFJ", "ENFJ", "ENTP", "ESTJ", "ISTJ", "INTJ", "ISTP", "ESTP", "ENTJ"], "type":"mbti"},
             {"question": "남자인가요? 여자인가요?", "answers": [
                 "남자", "여자"], "type":"gender"},
+            {"question": "몇살인가요?", "answers": ["17살", "18살"], "type":"age"},
+            {"question": "MBTI가 뭔가요?", "answers": ["INFP", "ENFP", 'ESFJ', "ISFJ", "ISFP", "ESFP", "INTP",
+                                                   "INFJ", "ENFJ", "ENTP", "ESTJ", "ISTJ", "INTJ", "ISTP", "ESTP", "ENTJ"], "type":"mbti"},
+
             {"question": "혈액형이 무엇인가요?", "answers": [
                 "A", "B", "AB", "O"], "type": "bloodtype"},
             {"question": "좋아하는 음식 종류가 무엇인가요?", "answers": [

@@ -12,13 +12,19 @@ class User(db.Model):
 
     # User Information
     ## TODO: AGE
+    age = db.Column(db.Integer)
     gender = db.Column(db.String(10))
     mbti = db.Column(db.String(10))
     bloodtype = db.Column(db.String(5))
     favoriteFood = db.Column(db.String(10))
     favoriteColor = db.Column(db.String(10))
 
-    # Create USER
+    # Matched Relation with SchoolNumber
+    matchedUser = db.Column(db.String(5))
+
+    # TODO: For Chatting
+    messages = db.relationship("Message", back_populates="user")
+    rooms = db.relationship("Room", back_populates="users")
 
     def __init__(self, password, schoolNumber):
         self.password = password
