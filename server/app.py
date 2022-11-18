@@ -8,12 +8,14 @@ import jwt
 from functools import wraps
 import os
 import csv
+import pandas as pd
 
 from models.index import User
 from question import Question
 from conn.db_utils import add_instance, delete_instance, get_all, edit_instance, commit_changes
 from conn.index import create_app
 from auth.user import decode_jwt_to_user, encode_user_to_jwt, get_schoolNumber
+from ml.index import RecommendSystem
 
 app = create_app()
 secret_key = os.getenv('SECRET_KEY')
@@ -38,6 +40,40 @@ def token_required(func):
         return func(current_user, *args, **kwargs)
 
     return decorated
+
+
+def user_list(auth, save_csv):
+    secretUser = os.getenv("SECRET_USER")
+    if auth.schoolNumber != secretUser:
+        return make_response(jsonify({"status": "faile", "message": "No Access Authority"}), 401)
+
+    users = get_all(User)
+    all_users = []
+    for user in users:
+        new_user = {
+            "schoolNumber": user.schoolNumber,
+            "gender": user.gender,
+            "age": user.age,
+            "mbti": user.mbti,
+            "bloodtype": user.bloodtype,
+            "favoriteFood": user.favoriteFood,
+            "favoriveColor": user.favoriteColor,
+            "matchedUser": user.matchedUser,
+            "matched": user.matched,
+        }
+
+        all_users.append(new_user)
+
+    all_users = pd.DataFrame(all_users)
+
+    if bool(save_csv):
+        with open('users.csv', 'wb') as f:
+            to_save_data = all_users.iloc[:, :-2]
+            w = csv.writer(f)
+            w.writerow(to_save_data.keys())
+            w.writerow(to_save_data.values())
+
+    return all_users
 
 
 @app.route("/question/<id>", methods=["GET", "POST"])
@@ -145,40 +181,35 @@ def login():
 #     return data, 200
 
 
-@app.route("/users", methods=["GET"])
+@app.route("/matching", methods=["POST"])
 @token_required
-def user_list(auth):
-    if auth.schoolNumber != "10214":
-        return make_response(jsonify({"status":"faile", "message":"No Access Authority"}), 401)
-
+def matching(auth):
     params = request.get_json()
-    save_csv = params.get("save_csv")
+    save_csv = params.get('save_csv')
 
-    users = get_all(User)
-    all_users = []
-    for user in users:
-        new_user = {
-            "id": user.id,
-            "password": user.password,
-            "age": user.age,
-            "gender": user.gender,
-            "mbti": user.mbti,
-            "bloodtype": user.bloodtype,
-            "favoriteFood": user.favoriteFood,
-            "favoriveColor": user.favoriteColor,
-            "matchedUser": user.matchedUser
-        }
+    all_user = user_list(auth, save_csv)
 
-        all_users.append(new_user)
+    recommendSystem = RecommendSystem(all_user)
 
-    if bool(save_csv):
-        with open('users.csv','wb') as f:
-            w = csv.writer(f)
-            w.writerow(all_users.keys())
-            w.writerow(all_users.values())
+    recommendSystem.recommend("pearson")
 
-    return jsonify(all_users), 200
+    matching_status = recommendSystem.matching()
 
+    for idx, matching_data in enumerate(matching_status):
+        user1, user2 = set(matching_data)
+        instance = User.query.filter_by(schoolNumber=user1).first_or_404(
+            description='There is no user with {}. Please Login First.'.format(user1))
+        setattr(instance, "matched", True)
+        setattr(instance, "matcheduser", user2)
+        commit_changes()
+
+        instance = User.query.filter_by(schoolNumber=user2).first_or_404(
+            description='There is no user with {}. Please Login First.'.format(user2))
+        setattr(instance, "matched", True)
+        setattr(instance, "matcheduser", user1)
+        commit_changes()
+
+    return make_response(jsonify({"status": "success", "message": "Matching Successfully!"}), 200)
 
 
 if __name__ == '__main__':

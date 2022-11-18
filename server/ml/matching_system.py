@@ -5,13 +5,15 @@ from pearson_corr import pearson_similarity
 
 
 class RecommendSystem():
-    def __init__(self, csv_path):
+    def __init__(self, df, csv_path=""):
         self.answers = [["남자", "여자"], ["17살", "18살"], ["INFP", "ENFP", 'ESFJ', "ISFJ", "ISFP", "ESFP", "INTP", "INFJ", "ENFJ", "ENTP", "ESTJ", "ISTJ", "INTJ", "ISTP", "ESTP", "ENTJ"],
                         ["A", "B", "AB", "O"],
                         ["한식", "양식", "중식", "일식"],
                         ["빨강", "주황", "노랑", "초록", "파랑", "보라", "흰색", "검은색"]]
 
-        self.df = pd.read_csv(csv_path)
+        if csv_path == "":
+            self.df = df
+        else: self.df = pd.read_csv(csv_path)
 
         self.schoolNumber_labels = self.df.iloc[:, 0]
         self.schoolNumber_labels.rename(None, inplace=True)
