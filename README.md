@@ -11,12 +11,12 @@
     - [x] Update Information
     - [ ] Matching
       - [x] Matching Database Relationship
-      - [ ] Waiting for Matching UP.
-      - [ ] Admin Panel for matching inforamtion.
+      - [x] Waiting for Matching UP.
+      - [x] Admin Panel for matching inforamtion.
       - [ ] Chatting with matched person (anonymously)
 
 - AI & ML
-
+    - [x] Cosine Similarity & Peason Correlation Similarity
     - [ ] Information Latent Vector 
     - [ ] Neural Collaborative Recommendation
     - [ ] Optimization for Production

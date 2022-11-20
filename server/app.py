@@ -9,6 +9,7 @@ from functools import wraps
 import os
 import csv
 import pandas as pd
+import json
 
 from models.index import User, Message, Room
 from question import Question
@@ -85,8 +86,6 @@ def question_api(auth_user, id):
     if request.method == "GET":
         # RETURN QUESTION
         target_question = question[id]
-
-        print(target_question)
 
         return jsonify(target_question)
 
@@ -182,43 +181,52 @@ def login():
 #     return data, 200
 
 
-@app.route("/matching", methods=["POST"])
+@app.route("/matching", methods=["POST", "GET"])
 @token_required
 def matching(auth):
     params = request.get_json()
     save_csv = params.get('save_csv')
 
     users = user_list(auth, bool(int(save_csv)))
-    # Matching is only for unmatched people
-    all_user = users.loc[users.matched == False]
-    all_user = all_user.iloc[:, :-2]  # Cleaned Dataframe for prediction
 
-    if all_user.empty:
-        return make_response(jsonify({"status": "fail", "message": "No user to match"}), 401)
+    if request.method == "GET":
+        users_dict = users.to_dict()
 
-    recommendSystem = RecommendSystem(all_user)
+        return make_response(jsonify({"status": "success", "users": users_dict}), 200)
 
-    recommendSystem.recommend("cosine")
+    elif request.method == "POST":
+        # Matching is only for unmatched people
+        all_user = users.loc[users.matched == False]
+        all_user = all_user.iloc[:, :-2]  # Cleaned Dataframe for prediction
 
-    matching_status = recommendSystem.matching()
+        if all_user.empty:
+            return make_response(jsonify({"status": "fail", "message": "No user to match"}), 401)
 
-    print(matching_status)
+        recommendSystem = RecommendSystem(all_user)
 
-    for idx, matching_data in enumerate(matching_status):
-        user1, user2 = set(matching_data)
-        instance = User.query.filter_by(schoolNumber=user1).first_or_404(
-            description='There is no user with {}. Please Login First.'.format(user1))
-        setattr(instance, "matched", True)
-        setattr(instance, "matchedUser", user2)
-        commit_changes()
+        recommendSystem.recommend("cosine")
 
-        instance = User.query.filter_by(schoolNumber=user2).first_or_404(
-            description='There is no user with {}. Please Login First.'.format(user2))
-        setattr(instance, "matched", True)
-        setattr(instance, "matchedUser", user1)
-        commit_changes()
+        matching_status = recommendSystem.matching()
 
-    return make_response(jsonify({"status": "success", "message": "Matching Successfully!"}), 200)
+        print(matching_status)
+
+        for idx, matching_data in enumerate(matching_status):
+            user1, user2 = set(matching_data)
+            instance = User.query.filter_by(schoolNumber=user1).first_or_404(
+                description='There is no user with {}. Please Login First.'.format(user1))
+            setattr(instance, "matched", True)
+            setattr(instance, "matchedUser", user2)
+            commit_changes()
+
+            instance = User.query.filter_by(schoolNumber=user2).first_or_404(
+                description='There is no user with {}. Please Login First.'.format(user2))
+            setattr(instance, "matched", True)
+            setattr(instance, "matchedUser", user1)
+            commit_changes()
+
+        return make_response(jsonify({"status": "success", "message": "Matching Successfully!"}), 200)
+
+    return make_response(jsonify({"status": "fail", "message": "Please Request with Appropriate Method"}))
 
 
 if __name__ == '__main__':
