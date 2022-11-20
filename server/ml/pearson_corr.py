@@ -17,6 +17,7 @@ def recommend():
 
 
 def pearson_similarity(a, b):
+    print(a, b)
     return np.dot((a-np.mean(a)), (b-np.mean(b))) / ((np.linalg.norm(a-np.mean(a))) * (np.linalg.norm(b-np.mean(b))))
 
 

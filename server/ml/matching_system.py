@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from cosine_similarity import cosine_similarity
-from pearson_corr import pearson_similarity
+from ml.cosine_similarity import cosine_similarity
+from ml.pearson_corr import pearson_similarity
 
 
 class RecommendSystem():
@@ -13,7 +13,8 @@ class RecommendSystem():
 
         if csv_path == "":
             self.df = df
-        else: self.df = pd.read_csv(csv_path)
+        else:
+            self.df = pd.read_csv(csv_path)
 
         self.schoolNumber_labels = self.df.iloc[:, 0]
         self.schoolNumber_labels.rename(None, inplace=True)
@@ -27,7 +28,7 @@ class RecommendSystem():
         for idx, answer in enumerate(self.answers):
             no_blank = df[idx].strip()
 
-            new_row.append(answer.index(no_blank))
+            new_row.append(answer.index(no_blank)+1)
 
         return new_row
 

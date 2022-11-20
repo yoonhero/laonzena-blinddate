@@ -8,8 +8,8 @@ class Room(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    users = db.relationship("User", back_populates="messages")
-    messages = db.relationship("Message", back_populates="room")
+    messages = db.relationship("Message", backref="room")
+    users = db.relationship("User", backref="room")
 
     createdAt = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updatedAt = db.Column(db.DateTime, default=datetime.datetime.utcnow)

@@ -10,7 +10,7 @@ import os
 import csv
 import pandas as pd
 
-from models.index import User
+from models.index import User, Message, Room
 from question import Question
 from conn.db_utils import add_instance, delete_instance, get_all, edit_instance, commit_changes
 from conn.index import create_app
@@ -44,7 +44,7 @@ def token_required(func):
 
 def user_list(auth, save_csv):
     secretUser = os.getenv("SECRET_USER")
-    if auth.schoolNumber != secretUser:
+    if auth.get("schoolNumber") != secretUser:
         return make_response(jsonify({"status": "faile", "message": "No Access Authority"}), 401)
 
     users = get_all(User)
@@ -64,14 +64,15 @@ def user_list(auth, save_csv):
 
         all_users.append(new_user)
 
-    all_users = pd.DataFrame(all_users)
+    all_users = pd.DataFrame(all_users).reset_index(drop=True)
 
     if bool(save_csv):
-        with open('users.csv', 'wb') as f:
-            to_save_data = all_users.iloc[:, :-2]
-            w = csv.writer(f)
-            w.writerow(to_save_data.keys())
-            w.writerow(to_save_data.values())
+        # with open('users.csv', 'wb') as f:
+        #     to_save_data = all_users.iloc[:, :-2]
+        #     w = csv.writer(f)
+        #     w.writerow(to_save_data.keys())
+        #     w.writerow(to_save_data.values())
+        all_users.to_csv("./users.csv")
 
     return all_users
 
@@ -187,26 +188,34 @@ def matching(auth):
     params = request.get_json()
     save_csv = params.get('save_csv')
 
-    all_user = user_list(auth, save_csv)
+    users = user_list(auth, bool(int(save_csv)))
+    # Matching is only for unmatched people
+    all_user = users.loc[users.matched == False]
+    all_user = all_user.iloc[:, :-2]  # Cleaned Dataframe for prediction
+
+    if all_user.empty:
+        return make_response(jsonify({"status": "fail", "message": "No user to match"}), 401)
 
     recommendSystem = RecommendSystem(all_user)
 
-    recommendSystem.recommend("pearson")
+    recommendSystem.recommend("cosine")
 
     matching_status = recommendSystem.matching()
+
+    print(matching_status)
 
     for idx, matching_data in enumerate(matching_status):
         user1, user2 = set(matching_data)
         instance = User.query.filter_by(schoolNumber=user1).first_or_404(
             description='There is no user with {}. Please Login First.'.format(user1))
         setattr(instance, "matched", True)
-        setattr(instance, "matcheduser", user2)
+        setattr(instance, "matchedUser", user2)
         commit_changes()
 
         instance = User.query.filter_by(schoolNumber=user2).first_or_404(
             description='There is no user with {}. Please Login First.'.format(user2))
         setattr(instance, "matched", True)
-        setattr(instance, "matcheduser", user1)
+        setattr(instance, "matchedUser", user1)
         commit_changes()
 
     return make_response(jsonify({"status": "success", "message": "Matching Successfully!"}), 200)
