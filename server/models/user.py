@@ -2,7 +2,7 @@ from database.index import db
 
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -12,7 +12,7 @@ class User(db.Model):
 
     # User Information
     ## TODO: AGE
-    age = db.Column(db.Integer)
+    age = db.Column(db.String(10))
     gender = db.Column(db.String(10))
     mbti = db.Column(db.String(10))
     bloodtype = db.Column(db.String(5))
@@ -21,11 +21,15 @@ class User(db.Model):
 
     # Matched Relation with SchoolNumber
     matchedUser = db.Column(db.String(5))
+    matched = db.Column(db.Boolean, default=False)
 
     # TODO: For Chatting
-    messages = db.relationship("Message", back_populates="user")
-    rooms = db.relationship("Room", back_populates="users")
+    messages = db.relationship("Message", backref="user")
+    roomId = db.Column(db.Integer, db.ForeignKey("room.id"))
 
     def __init__(self, password, schoolNumber):
         self.password = password
         self.schoolNumber = schoolNumber
+
+    def __repr__(self):
+        return f"<Post {self.schoolNumber}>"
