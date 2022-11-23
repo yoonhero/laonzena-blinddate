@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+
 import { Header } from "../../components/header";
 import { getQuestionAnswers, setAuthKey } from "../../utils/storage_utils";
 
@@ -12,28 +13,17 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     const loginRequest = () => {
-        // If User is required to answer to the questions.
-        // let answers = getQuestionAnswers();
-        // let nullAnswer = answers.filter((a) => a == undefined);
-
-        // if (nullAnswer.length != 0) {
-        //     router.push("/question/1");
-        // }
-
+        // CREATE User
         // axios.post(schooNumber, password)
-        // If login is failed
-        //
+        router.push("/question/1");
 
-        // IF Login is successful
         // setAuthKey(key)
-
-        router.push("/matching");
     };
 
     return (
         <>
             <Head>
-                <title>만남의 광장 - 로그인</title>
+                <title>만남의 광장 - 유저생성</title>
             </Head>
             <main className='w-screen h-screen bg-gray-100'>
                 <Header />

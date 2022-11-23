@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Header } from "../../components/header";
+import { setQuestionAnswers } from "../../utils/storage_utils";
 
 export default function Question(id) {
     const router = useRouter();
@@ -56,6 +57,8 @@ export default function Question(id) {
     };
 
     const NextPage = () => {
+        setQuestionAnswers(questionIdx, answerIdx);
+
         setAnswerIdx(undefined);
         if (questionIdx >= 5) {
             return router.push("/matching");
@@ -82,51 +85,45 @@ export default function Question(id) {
                     {(questionType == "gender" || questionType == "age") && (
                         <div className='mt-10 flex flex-col items-center'>
                             {answers.map((answer, i) => (
-                                <>
-                                    <div key={i} className='m-4'>
-                                        <button
-                                            onClick={() => clickButton(i)}
-                                            className={`px-20 py-8 md:px-40 md:py-8 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
-                                                i == answerIdx && "bg-gray-600 text-white"
-                                            }`}>
-                                            {answer}
-                                        </button>
-                                    </div>
-                                </>
+                                <div key={i} className='m-4'>
+                                    <button
+                                        onClick={() => clickButton(i)}
+                                        className={`px-20 py-8 md:px-40 md:py-8 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
+                                            i == answerIdx && "bg-gray-600 text-white"
+                                        }`}>
+                                        {answer}
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     )}
                     {questionType == "mbti" && (
                         <div className='p-2 mt-10 md:mt-20  h-full overflow-hidden grid grid-cols-3 md:grid-cols-4 grid-flow-row gap-2 items-center'>
                             {answers.map((answer, i) => (
-                                <>
-                                    <div key={i} className=''>
-                                        <button
-                                            onClick={() => clickButton(i)}
-                                            className={`px-5 py-2  bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
-                                                i == answerIdx && "bg-gray-600 text-white"
-                                            }`}>
-                                            {answer}
-                                        </button>
-                                    </div>
-                                </>
+                                <div key={i} className=''>
+                                    <button
+                                        onClick={() => clickButton(i)}
+                                        className={`px-5 py-2  bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
+                                            i == answerIdx && "bg-gray-600 text-white"
+                                        }`}>
+                                        {answer}
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     )}
                     {(questionType == "bloodtype" || questionType == "favoriteFood") && (
                         <div className='mt-10 flex flex-col items-center'>
                             {answers.map((answer, i) => (
-                                <>
-                                    <div key={i} className='m-2'>
-                                        <button
-                                            onClick={() => clickButton(i)}
-                                            className={`px-20 py-5 md:px-40 md:py-4 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
-                                                i == answerIdx && "bg-gray-600 text-white"
-                                            }`}>
-                                            {answer}
-                                        </button>
-                                    </div>
-                                </>
+                                <div key={i} className='m-2'>
+                                    <button
+                                        onClick={() => clickButton(i)}
+                                        className={`px-20 py-5 md:px-40 md:py-4 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
+                                            i == answerIdx && "bg-gray-600 text-white"
+                                        }`}>
+                                        {answer}
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     )}
@@ -135,18 +132,16 @@ export default function Question(id) {
                         <div className='mt-20 grid grid-cols-3 md:grid-cols-4 grid-flow-row items-center'>
                             {/* COLORS  */}
                             {answers.map((answer, i) => (
-                                <>
-                                    <div key={i} className='m-2'>
-                                        <button
-                                            onClick={() => clickButton(i)}
-                                            className={`w-20 h-20 bg-gray-200 border-0 rounded-full transition ease-in-out duration-300 opacity-1 hover:opacity-[0.5] ${
-                                                i == answerIdx && "ring-offset-0 ring-4"
-                                            }`}
-                                            style={{
-                                                backgroundColor: ["#DC3535", "#F49D1A", "#FFE15D", "#285430", "#4D96FF", "#A149FA", "#fff", "#000"][i],
-                                            }}></button>
-                                    </div>
-                                </>
+                                <div key={i} className='m-2'>
+                                    <button
+                                        onClick={() => clickButton(i)}
+                                        className={`w-20 h-20 bg-gray-200 border-0 rounded-full transition ease-in-out duration-300 opacity-1 hover:opacity-[0.5] ${
+                                            i == answerIdx && "ring-offset-0 ring-4"
+                                        }`}
+                                        style={{
+                                            backgroundColor: ["#DC3535", "#F49D1A", "#FFE15D", "#285430", "#4D96FF", "#A149FA", "#fff", "#000"][i],
+                                        }}></button>
+                                </div>
                             ))}
                         </div>
                     )}
@@ -157,6 +152,7 @@ export default function Question(id) {
                         </div>
                         <div>
                             <button
+                                disabled={answerIdx == undefined}
                                 onClick={() => NextPage()}
                                 className={`px-5 py-3 bg-gray-500 border-0 rounded-full font-bold hover:bg-gray-600 text-white text-xl font-xl transform transition ${
                                     answerIdx != undefined && "bg-green-400 hover:bg-green-500 md:hover:scale-[1.2]"

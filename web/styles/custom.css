@@ -1,0 +1,191 @@
+/* Copyright (c) 2022 by html5andblog (https://codepen.io/html5andblog/pen/PwWXOY) */
+.magnifying-container .magnifying .handle,
+.magnifying-container .magnifying .middle,
+.magnifying-container .magnifying .top,
+.magnifying-container-sm .magnifying .handle,
+.magnifying-container-sm .magnifying .middle,
+.magnifying-container-sm .magnifying .top {
+    position: absolute;
+}
+.magnifying-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+.magnifying-container .magnifying {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    -webkit-backface-visibility: hidden;
+    -webkit-animation: anim 3s infinite linear;
+    animation: anim 3s infinite linear;
+    margin-top: 25%;
+}
+.magnifying-container .magnifying .handle {
+    width: 10px;
+    height: 50px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: 49px;
+    left: 21px;
+    background-color: #d2b48c;
+}
+.magnifying-container .magnifying .middle {
+    width: 8px;
+    height: 10px;
+    background-color: #c0c0c0;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: 49px;
+    left: 42px;
+}
+.magnifying-container .magnifying .top {
+    width: 60px;
+    height: 60px;
+    background-color: #b0e0e6;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    border: 5px solid #c0c0c0;
+    top: 0;
+    left: 40px;
+}
+.magnifying-container-sm {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+.magnifying-container-sm .magnifying {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    -webkit-backface-visibility: hidden;
+    -webkit-animation: anim 3s infinite linear;
+    animation: anim 3s infinite linear;
+    margin-top: 25%;
+}
+.magnifying-container-sm .magnifying .handle {
+    width: 5px;
+    height: 25px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: 24.5px;
+    left: 10.5px;
+    background-color: #d2b48c;
+}
+.magnifying-container-sm .magnifying .middle {
+    width: 4px;
+    height: 5px;
+    background-color: #c0c0c0;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: 24.9px;
+    left: 21px;
+}
+.magnifying-container-sm .magnifying .top {
+    width: 30px;
+    height: 30px;
+    background-color: #b0e0e6;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border: 3px solid #c0c0c0;
+    top: 0;
+    left: 20px;
+}
+@-webkit-keyframes anim {
+    0% {
+        margin-top: 25%;
+        margin-left: 0;
+    }
+    12.5% {
+        margin-top: 7%;
+        margin-left: 7%;
+    }
+    25% {
+        margin-top: 0;
+        margin-left: 25%;
+    }
+    37.5% {
+        margin-top: 7%;
+        margin-left: 42%;
+    }
+    50% {
+        margin-top: 25%;
+        margin-left: 50%;
+    }
+    62.5% {
+        margin-top: 42%;
+        margin-left: 42%;
+    }
+    75% {
+        margin-top: 50%;
+        margin-left: 25%;
+    }
+    87.5% {
+        margin-top: 42%;
+        margin-left: 7%;
+    }
+    100% {
+        margin-top: 25%;
+        margin-left: 0;
+    }
+}
+@keyframes anim {
+    0% {
+        margin-top: 25%;
+        margin-left: 0;
+    }
+    12.5% {
+        margin-top: 7%;
+        margin-left: 7%;
+    }
+    25% {
+        margin-top: 0;
+        margin-left: 25%;
+    }
+    37.5% {
+        margin-top: 7%;
+        margin-left: 42%;
+    }
+    50% {
+        margin-top: 25%;
+        margin-left: 50%;
+    }
+    62.5% {
+        margin-top: 42%;
+        margin-left: 42%;
+    }
+    75% {
+        margin-top: 50%;
+        margin-left: 25%;
+    }
+    87.5% {
+        margin-top: 42%;
+        margin-left: 7%;
+    }
+    100% {
+        margin-top: 25%;
+        margin-left: 0;
+    }
+}
