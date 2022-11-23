@@ -16,9 +16,9 @@ export default function Matching() {
     }, []);
 
     useEffect(() => {
-        // if (!authed) {
-        //     router.push("/login");
-        // }
+        if (!authed) {
+            router.push("/login");
+        }
     }, [authed]);
 
     return (
