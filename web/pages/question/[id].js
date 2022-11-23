@@ -58,7 +58,7 @@ export default function Question(id) {
     const NextPage = () => {
         setAnswerIdx(undefined);
         if (questionIdx >= 5) {
-            return router.push("/");
+            return router.push("/matching");
         }
         return router.push(`/question/${questionIdx + 2}`);
     };
