@@ -11,6 +11,7 @@ export default function Login() {
 
     const [schoolNumber, setSchoolNumber] = useState("");
     const [password, setPassword] = useState("");
+    const [onlySema, setOnlySema] = useState("");
 
     const loginRequest = async () => {
         // If User is required to answer to the questions.
@@ -27,8 +28,12 @@ export default function Login() {
 
         // IF Login is successful
         // setAuthKey(key)
-        console.log(schoolNumber, password);
+
         if (schoolNumber == "" || password == "") {
+            return;
+        }
+
+        if (schoolNumber.length != 5) {
             return;
         }
 

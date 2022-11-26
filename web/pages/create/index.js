@@ -12,6 +12,7 @@ export default function Login() {
 
     const [schoolNumber, setSchoolNumber] = useState("");
     const [password, setPassword] = useState("");
+    const [onlySema, setOnlySema] = useState("");
 
     useEffect(() => {
         let auth = getAuthKey() ? true : false;
@@ -24,6 +25,21 @@ export default function Login() {
     const loginRequest = async () => {
         // CREATE User
         // axios.post(schooNumber, password)
+        const oonlySema = process.env.NEXT_PUBLIC_SECRET_KEY;
+
+        // TODO: Modal Alert
+        if (onlySema != oonlySema) {
+            return;
+        }
+
+        if (schoolNumber == "" || password == "") {
+            return;
+        }
+
+        if (schoolNumber.length != 5) {
+            return;
+        }
+
         const status = await CreateUserAPI({ schoolNumber, password });
 
         if (status) {
@@ -50,7 +66,11 @@ export default function Login() {
                                     setSchoolNumber(e.target.value)
                                 }
                                 value={schoolNumber}
-                                className="appearance-none bg-transparent text-3xl font-semibold  border-b-2 border-gray-300 transform transition east-in-out duration-300  w-full text-gray-700 mr-3 py-3 px-5 leading-tight focus:border-teal-500 focus:outline-none"
+                                className={`appearance-none bg-transparent text-3xl font-semibold  border-b-2 border-gray-300 transform transition east-in-out duration-300  w-full text-gray-700 mr-3 py-3 px-5 leading-tight focus:outline-none ${
+                                    schoolNumber.length != 5
+                                        ? "focus:border-red-500"
+                                        : "focus:border-green-500 "
+                                }`}
                                 type="text"
                                 placeholder="학번을 입력해주세요"
                                 aria-label="School Number"
@@ -64,6 +84,16 @@ export default function Login() {
                                 type="text"
                                 placeholder="비밀번호"
                                 aria-label="Password"
+                            />
+                        </div>
+                        <div className="m-3 flex items-center" key={2}>
+                            <input
+                                onChange={(e) => setOnlySema(e.target.value)}
+                                value={onlySema}
+                                className={`appearance-none bg-transparent text-md md:text-xl font-semibold  border-b-2 border-gray-300 transform transition east-in-out duration-300  w-full text-gray-700 mr-3 py-4 px-4 md:px-8 leading-tight focus:border-red-500 focus:outline-none text-center`}
+                                type="text"
+                                placeholder="세마고 학습자료실 비밀번호"
+                                aria-label="Security"
                             />
                         </div>
                         <div className="mt-10" key={3}>
