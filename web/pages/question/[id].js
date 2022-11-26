@@ -140,25 +140,25 @@ export default function Question() {
 
                 {/* Question Container */}
                 <div className="w-full relative flex flex-col items-center justify-center">
-                    <div className="mt-10 px-6 py-2  rounded-3xl border-[1px] border-black font-md text-xl">
+                    <div className="mt-3 md:mt-10 px-5 py-2 md:px-6 md:py-2  rounded-3xl border-[1px] border-black font-md text-xl">
                         {
                             ["하나", "둘", "셋", "넷", "다섯", "여섯", "일곱"][
                                 questionIdx
                             ]
                         }
                     </div>
-                    <div className="mt-10 text-center">
-                        <span className="text-black font-semibold text-4xl md:text-5xl break-all">
+                    <div className="mt-4 md:mt-10 text-center">
+                        <span className="text-black font-semibold text-3xl sm:text-4xl md:text-5xl break-all">
                             {question}
                         </span>
                     </div>
                     {(questionType == "gender" || questionType == "age") && (
                         <div className="mt-10 flex flex-col items-center">
                             {answers.map((answer, i) => (
-                                <div key={i} className="m-4">
+                                <div key={i} className="m-2 md:m-4">
                                     <button
                                         onClick={() => clickButton(i)}
-                                        className={`px-20 py-8 md:px-40 md:py-8 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
+                                        className={`px-20 py-5 md:px-40 md:py-8 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white text-2xl sm:text-3xl font-xl ${
                                             i == answerIdx &&
                                             "bg-gray-600 text-white"
                                         }`}>
@@ -169,12 +169,12 @@ export default function Question() {
                         </div>
                     )}
                     {questionType == "mbti" && (
-                        <div className="p-2 mt-10 md:mt-20  h-full overflow-hidden grid grid-cols-3 md:grid-cols-4 grid-flow-row gap-2 items-center">
+                        <div className="p-2 mt-5 md:mt-10 md:mt-20  h-full overflow-hidden grid grid-cols-3 md:grid-cols-4 grid-flow-row gap-2 items-center">
                             {answers.map((answer, i) => (
                                 <div key={i} className="">
                                     <button
                                         onClick={() => clickButton(i)}
-                                        className={`px-5 py-2  bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
+                                        className={`px-5 py-2  bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white text-xl md:text-3xl font-xl ${
                                             i == answerIdx &&
                                             "bg-gray-600 text-white"
                                         }`}>
@@ -186,12 +186,12 @@ export default function Question() {
                     )}
                     {(questionType == "bloodtype" ||
                         questionType == "favoriteFood") && (
-                        <div className="mt-10 flex flex-col items-center">
+                        <div className="mt-4 md:mt-10 flex flex-col items-center">
                             {answers.map((answer, i) => (
-                                <div key={i} className="m-2">
+                                <div key={i} className="m-2 md:m-4">
                                     <button
                                         onClick={() => clickButton(i)}
-                                        className={`px-20 py-5 md:px-40 md:py-4 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-3xl font-xl ${
+                                        className={`px-20 py-4 md:py-5 md:px-40 md:py-4 bg-gray-200 border-0 rounded-full md:hover:bg-gray-800 md:hover:text-white  text-2xl sm:text-3xl font-xl ${
                                             i == answerIdx &&
                                             "bg-gray-600 text-white"
                                         }`}>
@@ -203,7 +203,7 @@ export default function Question() {
                     )}
 
                     {questionType == "favoriteColor" && (
-                        <div className="mt-20 grid grid-cols-3 md:grid-cols-4 grid-flow-row items-center">
+                        <div className="mt-4 sm:mt-20 grid grid-cols-3 md:grid-cols-4 grid-flow-row items-center">
                             {/* COLORS  */}
                             {answers.map((answer, i) => (
                                 <div key={i} className="m-2">
