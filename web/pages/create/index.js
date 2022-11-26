@@ -28,7 +28,7 @@ export default function Login() {
         const oonlySema = process.env.NEXT_PUBLIC_SECRET_KEY;
 
         // TODO: Modal Alert
-        if (onlySema != oonlySema) {
+        if (onlySema != String(oonlySema)) {
             return;
         }
 
