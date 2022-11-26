@@ -1,15 +1,14 @@
 import { getAuthKey } from "./storage_utils";
 
-const getHeader = () => {
-    const authKey = getAuthKey();
+const getAuthHeader = () => {
+  const authKey = getAuthKey();
 
-    const headers = {
-        Authorization: authKey,
-    };
-    return headers;
+  const headers = {
+    Authorization: authKey,
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  };
+  return headers;
 };
 
-// TODO: Login Axios Request
-const login = () => {};
-
-export { getHeader, login };
+export { getAuthHeader };

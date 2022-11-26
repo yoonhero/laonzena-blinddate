@@ -10,6 +10,7 @@ import os
 import csv
 import pandas as pd
 import json
+from flask_cors import CORS, cross_origin
 
 from models.index import User, Message, Room
 from question import Question
@@ -22,6 +23,8 @@ app = create_app()
 secret_key = os.getenv('SECRET_KEY')
 app.config["SECRET_KEY"] = secret_key
 app.config["JSON_AS_ASCII"] = False
+
+cors = CORS(app, resources={r'*': {'origins': '*'}})
 
 question = Question()
 
@@ -188,11 +191,17 @@ def matching(auth):
     save_csv = params.get('save_csv')
 
     users = user_list(auth, bool(int(save_csv)))
+    secretUser = os.getenv("SECRET_USER")
 
     if request.method == "GET":
         users_dict = users.to_dict()
 
-        return make_response(jsonify({"status": "success", "users": users_dict}), 200)
+        if auth.schoolNumber == secretUser:
+            return make_response(jsonify({"status": "success", "users": users_dict}), 200)
+
+        user_dict = users_dict.get(auth.schoolNumber)
+
+        return make_response(jsonify({"status": "success", "user": user_dict}), 200)
 
     elif request.method == "POST":
         # Matching is only for unmatched people
