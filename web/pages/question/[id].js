@@ -169,7 +169,7 @@ export default function Question() {
                         </div>
                     )}
                     {questionType == "mbti" && (
-                        <div className="p-2 mt-5 md:mt-10 md:mt-20  h-full overflow-hidden grid grid-cols-3 md:grid-cols-4 grid-flow-row gap-2 items-center">
+                        <div className="p-2 mt-5 md:mt-10 md:mt-20  grid grid-cols-3 md:grid-cols-4 grid-flow-row gap-2 items-center">
                             {answers.map((answer, i) => (
                                 <div key={i} className="">
                                     <button
