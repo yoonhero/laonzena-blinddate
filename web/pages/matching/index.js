@@ -6,39 +6,43 @@ import { Header } from "../../components/header";
 import { getAuthKey } from "../../utils/storage_utils";
 
 export default function Matching() {
-  const router = useRouter();
-  const [authed, setAuthed] = useState();
+    const router = useRouter();
+    const [authed, setAuthed] = useState();
 
-  useEffect(() => {
-    let auth = getAuthKey() ? true : false;
+    useEffect(() => {
+        let auth = getAuthKey() ? true : false;
 
-    if (!auth) {
-      router.push("/login");
-    }
-  }, []);
+        if (!auth) {
+            router.push("/login");
+        }
+    }, []);
 
-  return (
-    <>
-      <Head>
-        <title>라온제나 - 매칭 현황</title>
-      </Head>
-      <main className="w-screen h-screen bg-gray-100 bg-[url('/background.svg')]">
-        <Header />
-        <div className="w-full h-[80vh] relative flex flex-col items-center justify-center p-2">
-          <div className="flex flex-col items-center">
-            <h1 className="text-4xl md:text-6xl font-black ">짝을 찾는중...</h1>
-            <span className="m-4 text-xl">12/20일 공개 예정이랍니다!</span>
+    return (
+        <>
+            <Head>
+                <title>라온제나 - 매칭 현황</title>
+            </Head>
+            <main className="w-screen h-screen bg-gray-100 bg-[url('/background.svg')]">
+                <Header />
+                <div className="w-full h-[80vh] relative flex flex-col items-center justify-center p-2">
+                    <div className="flex flex-col items-center">
+                        <h1 className="text-4xl md:text-6xl font-black ">
+                            짝을 찾는중...
+                        </h1>
+                        <span className="m-4 text-xl">
+                            12/20일 공개 예정이랍니다!
+                        </span>
 
-            <div className="scale-[1.2] magnifying-container">
-              <div className="magnifying">
-                <div className="handle"></div>
-                <div className="middle"></div>
-                <div className="top"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </>
-  );
+                        <div className="scale-[1.2] magnifying-container">
+                            <div className="magnifying">
+                                <div className="handle"></div>
+                                <div className="middle"></div>
+                                <div className="top"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </>
+    );
 }

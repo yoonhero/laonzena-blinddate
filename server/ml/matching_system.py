@@ -16,6 +16,8 @@ class RecommendSystem():
         else:
             self.df = pd.read_csv(csv_path)
 
+        self.df = self.df.reset_index(drop=True)
+
         self.schoolNumber_labels = self.df.iloc[:, 0]
         self.schoolNumber_labels.rename(None, inplace=True)
 
@@ -27,13 +29,16 @@ class RecommendSystem():
 
         for idx, answer in enumerate(self.answers):
             no_blank = df[idx].strip()
-
-            new_row.append(answer.index(no_blank)+1)
+            try:
+                new_row.append(answer.index(no_blank)+1)
+            except:
+                new_row.append(0)
 
         return new_row
 
     def recommend(self, method):
         if method == "cosine":
+            print(self.index_dataframe)
             self.result_matrix = np.array([[cosine_similarity(np.array(self.index_dataframe[a]), np.array(
                 self.index_dataframe[b])) for a in range(len(self.index_dataframe))] for b in range(len(self.index_dataframe))])
 

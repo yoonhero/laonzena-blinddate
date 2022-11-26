@@ -5,105 +5,111 @@ import { setAuthKey } from "./storage_utils";
 const API_SERVER_URL = process.env.NEXT_PUBLIC_API_SERVER;
 
 const LoginAPI = async ({ schoolNumber, password }) => {
-  const data = {
-    schoolNumber: schoolNumber,
-    password: password,
-  };
+    const data = {
+        schoolNumber: schoolNumber,
+        password: password,
+    };
 
-  const header = {
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
-  };
+    const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+    };
 
-  try {
-    const response = await axios.post(API_SERVER_URL + "/login", data, header);
-    const status = response.data.status;
+    try {
+        const response = await axios.post(
+            API_SERVER_URL + "/login",
+            data,
+            headers
+        );
+        const status = response.data.status;
 
-    if (status == "success") {
-      const authKey = response.data.Authorization;
-      setAuthKey(authKey);
+        if (status == "success") {
+            const authKey = response.data.Authorization;
+            setAuthKey(authKey);
 
-      return true;
-    } else {
-      return false;
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.log(e);
     }
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 const CreateUserAPI = async ({ schoolNumber, password }) => {
-  const data = {
-    schoolNumber: schoolNumber,
-    password: password,
-  };
+    const data = {
+        schoolNumber: schoolNumber,
+        password: password,
+    };
 
-  const header = {
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
-  };
+    const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+    };
 
-  try {
-    const response = await axios.post(
-      API_SERVER_URL + "/create_user",
-      data,
-      header
-    );
-    const status = response.data.status;
+    try {
+        const response = await axios.post(
+            API_SERVER_URL + "/create_user",
+            data,
+            headers
+        );
+        const status = response.data.status;
 
-    if (status == "success") {
-      const authKey = response.data.Authorization;
-      setAuthKey(authKey);
+        if (status == "success") {
+            const authKey = response.data.Authorization;
+            setAuthKey(authKey);
 
-      return true;
-    } else {
-      return false;
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.log(e);
     }
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 const UpdateUserInfoAPI = async ({ questionIdx, answerIdx }) => {
-  const data = {
-    answer_idx: answerIdx,
-  };
+    const data = {
+        answer_idx: answerIdx,
+    };
 
-  const header = getAuthHeader();
+    const headers = getAuthHeader();
 
-  let url = API_SERVER_URL + `/question/${questionIdx}`;
+    axios.defaults.headers.common["Authorization"] = headers.Authorization;
 
-  try {
-    const response = await axios.post(url, data, header);
-    const status = response.data.status;
+    let url = API_SERVER_URL + `/question/${questionIdx}`;
 
-    if (status == "success") {
-      return true;
-    } else {
-      return false;
+    try {
+        const response = await axios.post(url, data, headers);
+        const status = response.data.status;
+
+        if (status == "success") {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.log(e);
     }
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 const getMatchingStatusAPI = async ({}) => {
-  const header = getAuthHeader();
+    const headers = getAuthHeader();
 
-  let url = API_SERVER_URL + `/matching`;
+    let url = API_SERVER_URL + `/matching`;
 
-  try {
-    const response = await axios.get(url, data, header);
-    const status = response.data.status;
+    try {
+        const response = await axios.get(url, data, headers);
+        const status = response.data.status;
 
-    if (status == "success") {
-      return response.data.user;
-    } else {
-      return false;
+        if (status == "success") {
+            return response.data.user;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.log(e);
     }
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 export { LoginAPI, CreateUserAPI, UpdateUserInfoAPI, getMatchingStatusAPI };

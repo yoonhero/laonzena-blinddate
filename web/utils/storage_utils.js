@@ -12,7 +12,14 @@ const getQuestionAnswers = () => {
     if (answers) {
         answers = JSON.parse(answers);
     } else {
-        answers = [undefined, undefined, undefined, undefined, undefined, undefined];
+        answers = [
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+        ];
     }
 
     return answers;

@@ -48,8 +48,8 @@ def token_required(func):
 
 def user_list(auth, save_csv):
     secretUser = os.getenv("SECRET_USER")
-    if auth.get("schoolNumber") != secretUser:
-        return make_response(jsonify({"status": "faile", "message": "No Access Authority"}), 401)
+    # if auth.get("schoolNumber") != secretUser:
+    #     return make_response(jsonify({"status": "faile", "message": "No Access Authority"}), 401)
 
     users = get_all(User)
     all_users = []
@@ -194,16 +194,25 @@ def matching(auth):
     secretUser = os.getenv("SECRET_USER")
 
     if request.method == "GET":
+        print(users)
         users_dict = users.to_dict()
 
-        if auth.schoolNumber == secretUser:
+        if auth.get("schoolNumber") == secretUser:
             return make_response(jsonify({"status": "success", "users": users_dict}), 200)
 
-        user_dict = users_dict.get(auth.schoolNumber)
+        print(users_dict.get("schoolNumber"))
+        userIdx = list(users_dict.get("schoolNumber").values()).index(
+            auth.get("schoolNumber"))
 
-        return make_response(jsonify({"status": "success", "user": user_dict}), 200)
+        # user_dict = users_dict
+        print(userIdx)
+
+        return make_response(jsonify({"status": "success", "matched": users_dict.get("matched").get(str(userIdx))}), 200)
 
     elif request.method == "POST":
+        if auth.get("schoolNumber") != secretUser:
+            return make_response(jsonify({"status": "faile", "message": "No Access Authority"}), 401)
+
         # Matching is only for unmatched people
         all_user = users.loc[users.matched == False]
         all_user = all_user.iloc[:, :-2]  # Cleaned Dataframe for prediction

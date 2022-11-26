@@ -1,3 +1,7 @@
 ,schoolNumber,gender,age,mbti,bloodtype,favoriteFood,favoriveColor,matchedUser,matched
-0,10215,남자,17살,INFP,A,한식,빨강,10214,True
-1,10214,남자,18살,ESFJ,AB,한식,주황,10215,True
+0,10999,여자,17살,INTP,B,양식,노랑,11111,True
+1,11111,남자,17살,ENTP,AB,양식,주황,10999,True
+2,10215,남자,17살,INFP,A,한식,빨강,10214,True
+3,10214,여자,18살,ENFJ,B,양식,검은색,10215,True
+4,10219,남자,18살,ESTP,AB,양식,노랑,10216,True
+5,10216,남자,17살,ENTP,B,중식,검은색,10219,True
