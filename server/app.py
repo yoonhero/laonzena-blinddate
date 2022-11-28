@@ -11,7 +11,9 @@ import csv
 import pandas as pd
 import json
 from flask_cors import CORS, cross_origin
+from sqlalchemy.exc import IntegrityError
 
+from database.index import db
 from models.index import User, Message, Room
 from question import Question
 from conn.db_utils import add_instance, delete_instance, get_all, edit_instance, commit_changes
@@ -134,8 +136,16 @@ def create_user():
     hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     # TODO: Create USER Row
-    add_instance(User,
-                 password=hashed_password, schoolNumber=schoolNumber)
+    # add_instance(User,
+    #              )
+
+    instance = User(password=hashed_password, schoolNumber=schoolNumber)
+    db.session.add(instance)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"status":"fail", "message":"User is already existed"}, 401)        
 
     encoded_jwt_token = encode_user_to_jwt(
         schoolNumber, hashed_password, app.config["SECRET_KEY"])
