@@ -16,23 +16,21 @@ const LoginAPI = async ({ schoolNumber, password }) => {
     };
 
     try {
-        const response = await axios.post(
-            API_SERVER_URL + "/login",
-            data,
-            headers
-        );
+        const response = await axios.post(API_SERVER_URL + "/login", data, headers);
         const status = response.data.status;
+        const message = response.data.message;
 
         if (status == "success") {
             const authKey = response.data.Authorization;
             setAuthKey(authKey);
 
-            return true;
+            return [true, message];
         } else {
-            return false;
+            return [false, message];
         }
     } catch (e) {
         console.log(e);
+        return false, "Fail to network with server.";
     }
 };
 
@@ -48,23 +46,21 @@ const CreateUserAPI = async ({ schoolNumber, password }) => {
     };
 
     try {
-        const response = await axios.post(
-            API_SERVER_URL + "/create_user",
-            data,
-            headers
-        );
+        const response = await axios.post(API_SERVER_URL + "/create_user", data, headers);
         const status = response.data.status;
+        const message = response.data.message;
 
         if (status == "success") {
             const authKey = response.data.Authorization;
             setAuthKey(authKey);
 
-            return true;
+            return [true, message];
         } else {
-            return false;
+            return [false, message];
         }
     } catch (e) {
         console.log(e);
+        return false, "Fail to network with server.";
     }
 };
 

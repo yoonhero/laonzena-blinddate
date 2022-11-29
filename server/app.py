@@ -1,7 +1,6 @@
 from flask import (
     Flask, render_template, request, jsonify, make_response
 )
-from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import hashlib
 import jwt
@@ -139,13 +138,13 @@ def create_user():
     # add_instance(User,
     #              )
 
+    instance = User.query.filter(User.schoolNumber == schoolNumber).first()
+    if instance:
+        return jsonify({"status": "fail", "message": "User is already existed"}, 401)
+
     instance = User(password=hashed_password, schoolNumber=schoolNumber)
     db.session.add(instance)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        return jsonify({"status":"fail", "message":"User is already existed"}, 401)        
+    db.session.commit()
 
     encoded_jwt_token = encode_user_to_jwt(
         schoolNumber, hashed_password, app.config["SECRET_KEY"])
