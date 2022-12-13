@@ -9,6 +9,7 @@ class User(db.Model):
     # Using When User Login
     password = db.Column(db.String(128), nullable=False)
     schoolNumber = db.Column(db.String(5), unique=True, nullable=False)
+    phoneNumber = db.Column(db.String(15), nullable=False)
 
     # User Information
     ## TODO: AGE

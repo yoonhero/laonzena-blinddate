@@ -130,6 +130,7 @@ def create_user():
     #username = params.get('username')
     password = params.get('password')
     schoolNumber = params.get('schoolNumber')
+    phoneNumber = params.get("phoneNumber")
 
     # hashed_password = bcrypt.hashpw(password, salt)
     hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
@@ -142,7 +143,8 @@ def create_user():
     if instance:
         return jsonify({"status": "fail", "message": "User is already existed"}, 401)
 
-    instance = User(password=hashed_password, schoolNumber=schoolNumber)
+    instance = User(password=hashed_password,
+                    schoolNumber=schoolNumber, phoneNumber=phoneNumber)
     db.session.add(instance)
     db.session.commit()
 

@@ -34,10 +34,11 @@ const LoginAPI = async ({ schoolNumber, password }) => {
     }
 };
 
-const CreateUserAPI = async ({ schoolNumber, password }) => {
+const CreateUserAPI = async ({ schoolNumber, password, phoneNumber }) => {
     const data = {
         schoolNumber: schoolNumber,
         password: password,
+        phoneNumber: phoneNumber,
     };
 
     const headers = {
