@@ -30,7 +30,7 @@ export default function Matching() {
                             짝을 찾는중...
                         </h1>
                         <span className="m-4 text-xl">
-                            12/20일 공개 예정이랍니다!
+                            12/22 저녁에 메세지를 확인해주세요!
                         </span>
 
                         <div className="scale-[1.2] magnifying-container">
